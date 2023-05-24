@@ -1,4 +1,6 @@
 const UserRepository = require("../reopsitory/user-repository");
+const jwt=require('jsonwebtoken')
+const {JWT_KEY}=require('../config/configServer')
 
 class UserService {
   constructor() {
@@ -14,15 +16,7 @@ class UserService {
       console.log(error);
     }
   }
-  async getUser(userId) {
-    try {
-      const user = await this.userRepository.getUser(userId);
-      return user;
-    } catch (error) {
-      console.log("Something wrong in service");
-      console.log(error);
-    }
-  }
+
   async destroy(userId) {
     try {
       const user = await this.userRepository.destroy(userId);
@@ -33,10 +27,35 @@ class UserService {
     }
   }
 
-  async getAll() {
+  async getuserById(userId){
     try {
-      const users = await this.userRepository.getAll();
-      return users;
+      const user=await this.userRepository.getUser({
+        attributes:['email','id']
+      })
+      return user;
+      console.log(user)
+    } catch (error) {
+      console.log("Something wrong in service");
+      console.log(error);
+    }
+  
+
+  }
+
+  async createToken(user){
+    try {
+      const token=jwt.sign(user,JWT_KEY,{expiresIn:'1d'});
+      return token;
+    } catch (error) {
+      console.log("Something wrong in service");
+      console.log(error);
+    }
+  }
+
+  async verifyToken(token){
+    try {
+      const response=jwt.verify(token,JWT_KEY);
+      return response;
     } catch (error) {
       console.log("Something wrong in service");
       console.log(error);
