@@ -29,11 +29,8 @@ class UserService {
 
   async getuserById(userId){
     try {
-      const user=await this.userRepository.getUser({
-        attributes:['email','id']
-      })
+      const user=await this.userRepository.getUser(userId)
       return user;
-      console.log(user)
     } catch (error) {
       console.log("Something wrong in service");
       console.log(error);
