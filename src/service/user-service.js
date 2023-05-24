@@ -1,6 +1,7 @@
 const UserRepository = require("../reopsitory/user-repository");
 const jwt=require('jsonwebtoken')
 const {JWT_KEY}=require('../config/configServer')
+const bcrypt=require('bcrypt')
 
 class UserService {
   constructor() {
@@ -39,7 +40,7 @@ class UserService {
 
   }
 
-  async createToken(user){
+   createToken(user){
     try {
       const token=jwt.sign(user,JWT_KEY,{expiresIn:'1d'});
       return token;
@@ -49,10 +50,19 @@ class UserService {
     }
   }
 
-  async verifyToken(token){
+   verifyToken(token){
     try {
       const response=jwt.verify(token,JWT_KEY);
       return response;
+    } catch (error) {
+      console.log("Something wrong in service");
+      console.log(error);
+    }
+  }
+
+  checkpassword(plainpassword,encryptedpass){
+    try {
+      return bcrypt.compareSync(plainpassword,encryptedpass);
     } catch (error) {
       console.log("Something wrong in service");
       console.log(error);
