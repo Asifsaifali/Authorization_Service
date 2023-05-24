@@ -36,6 +36,20 @@ class UserRepository {
       console.log(error);
     }
   }
+
+  async getByEmail(emailId){
+    try {
+      const resp = await User.findOne({
+        where: {
+          email: emailId,
+        },
+      });
+      return resp;
+    } catch (error) {
+      console.log("Something wrong in repository");
+      console.log(error);
+    }
+  }
   async update(userId) {
     try {
       const resp = await User.update(userId, {

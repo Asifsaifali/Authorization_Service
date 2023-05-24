@@ -113,12 +113,32 @@ const create = async (req, res) => {
         });
       }
     };
+ 
 
-
+    const signIn=async(req,res)=>{
+      try {
+        const user=await userService.signIn(req.body.email,req.body.password)
+        return res.status(200).json({
+          data: user,
+          messge: "User fetched Successfully",
+          success: true,
+          err: {},
+        })
+        
+      } catch (error) {
+        console.log(error);
+        console.log("Something went wrong in Controller");
+        res.status(500).json({
+          messge: "Not able to create User",
+          success: true,
+          data: {},
+          err: { error },
+        });
+      }
+    }
 module.exports = {
   create,
   get,
   destroy,
-  update,
-  getAll,
+  signIn,
 };

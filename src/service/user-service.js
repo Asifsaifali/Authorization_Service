@@ -1,7 +1,7 @@
 const UserRepository = require("../reopsitory/user-repository");
-const jwt=require('jsonwebtoken')
-const {JWT_KEY}=require('../config/configServer')
-const bcrypt=require('bcrypt')
+const jwt = require("jsonwebtoken");
+const { JWT_KEY } = require("../config/configServer");
+const bcrypt = require("bcrypt");
 
 class UserService {
   constructor() {
@@ -28,21 +28,36 @@ class UserService {
     }
   }
 
-  async getuserById(userId){
+  async getuserById(userId) {
     try {
-      const user=await this.userRepository.getUser(userId)
+      const user = await this.userRepository.getUser(userId);
       return user;
     } catch (error) {
       console.log("Something wrong in service");
       console.log(error);
     }
-  
-
   }
 
-   createToken(user){
+  async signIn(email, plainpassword) {
     try {
-      const token=jwt.sign(user,JWT_KEY,{expiresIn:'1d'});
+      const user = await this.userRepository.getByEmail(email);
+
+      const passMatch = this.checkpassword(plainpassword, user.password);
+      if (!passMatch) {
+        console.log("Password doesn't Match");
+        throw { error: "Incorrect Password" };
+      }
+      const newJWT = this.createToken({ email: user.email, id: user.id });
+      return newJWT;
+    } catch (error) {
+      console.log("Something wrong in service");
+      console.log(error);
+    }
+  }
+
+  createToken(user) {
+    try {
+      const token = jwt.sign(user, JWT_KEY, { expiresIn: "1d" });
       return token;
     } catch (error) {
       console.log("Something wrong in service");
@@ -50,9 +65,9 @@ class UserService {
     }
   }
 
-   verifyToken(token){
+  verifyToken(token) {
     try {
-      const response=jwt.verify(token,JWT_KEY);
+      const response = jwt.verify(token, JWT_KEY);
       return response;
     } catch (error) {
       console.log("Something wrong in service");
@@ -60,9 +75,9 @@ class UserService {
     }
   }
 
-  checkpassword(plainpassword,encryptedpass){
+  checkpassword(plainpassword, encryptedpass) {
     try {
-      return bcrypt.compareSync(plainpassword,encryptedpass);
+      return bcrypt.compareSync(plainpassword, encryptedpass);
     } catch (error) {
       console.log("Something wrong in service");
       console.log(error);
