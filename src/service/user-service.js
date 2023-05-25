@@ -44,8 +44,8 @@ class UserService {
 
       const passMatch = this.checkpassword(plainpassword, user.password);
       if (!passMatch) {
-        console.log("Password doesn't Match");
-        throw { error: "Incorrect Password" };
+        console.log('Password does not Match');
+        throw { error: 'Incorrect Password' };
       }
       const newJWT = this.createToken({ email: user.email, id: user.id });
       return newJWT;
