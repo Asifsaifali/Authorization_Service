@@ -17,6 +17,18 @@ const userAuthenticted=(req,res,next)=>{
 }
 
 
+const isAdminAuth=(req,res,next)=>{
+  if(!req.body.id){
+    return res.status(400).json({
+        message:"Something went wrong",
+        success:false,
+        err:'User id missing in the request'
+    })
+  }
+  next();
+}
+
 module.exports={
-    userAuthenticted
+    userAuthenticted,
+    isAdminAuth,
 }

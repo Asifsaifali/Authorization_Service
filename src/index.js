@@ -6,7 +6,6 @@ const bodyparser = require("body-parser");
 const db=require('./models/index')
 
 
-
 const setupServer = () => {
   app.use(bodyparser.urlencoded({ extended: false }));
   app.use(bodyparser.json());
@@ -17,8 +16,6 @@ const setupServer = () => {
     if(process.env.DB_SYNC){
       db.sequelize.sync({alter:true})
     }
-
-    
   });
 };
 
