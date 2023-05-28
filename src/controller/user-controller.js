@@ -25,9 +25,9 @@ const create = async (req, res) => {
   } catch (error) {
     console.log(error);
     console.log("Something went wrong in Controller");
-    res.status(500).json({
-      messge: "Not able to create User",
-      success: true,
+    res.status(error.statusCode).json({
+      messge: error.message,
+      success: false,
       data: {},
       err: { error },
     });
